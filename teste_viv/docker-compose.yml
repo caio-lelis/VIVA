@@ -1,0 +1,156 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: condominio-backend
+    ports:
+      - "8000:8000"
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_NAME: condominio-docs
+      PORT: 8000
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - condominio-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: condominio-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET_NAME: condominio-docs
+      NEXT_PUBLIC_API_BASE_URL: /backend
+      NEXT_PUBLIC_MINIO_ENDPOINT: http://localhost:9000
+      NEXT_PUBLIC_MINIO_BUCKET_NAME: condominio-docs
+      PORTAL_ADMIN_USER: admin
+      PORTAL_ADMIN_PASSWORD: admin123
+      PORTAL_MORADOR_USER: morador
+      PORTAL_MORADOR_PASSWORD: viva2026
+      AUTH_COOKIE_SECURE: "false"
+    depends_on:
+      backend:
+        condition: service_started
+      minio:
+        condition: service_healthy
+    networks:
+      - condominio-network
+
+  # MinIO - Storage de Objetos S3-compatível
+  minio:
+    image: minio/minio:latest
+    container_name: condominio-minio
+    ports:
+      - "9000:9000"    # API MinIO
+      - "9001:9001"    # Console MinIO
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - condominio-network
+
+  # Opcional: PostgreSQL para rastreamento de uploads
+  postgres:
+    image: postgres:16-alpine
+    container_name: condominio-postgres
+    environment:
+      POSTGRES_USER: condominio_user
+      POSTGRES_PASSWORD: condominio_password
+      POSTGRES_DB: condominio_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U condominio_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - condominio-network
+
+  # Opcional: Redis para cache e sessões
+  redis:
+    image: redis:7-alpine
+    container_name: condominio-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - condominio-network
+
+volumes:
+  minio_data:
+    driver: local
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  condominio-network:
+    driver: bridge
+
+# ============================================
+# COMO USAR
+# ============================================
+#
+# Iniciar tudo:
+#   docker compose up -d --build
+#
+# Parar tudo:
+#   docker compose down
+#
+# Ver logs:
+#   docker compose logs -f frontend
+#
+# Ver status:
+#   docker compose ps
+#
+# Frontend:
+#   http://localhost:3000
+#
+# Backend FastAPI:
+#   http://localhost:8000/api/health
+#
+# Acessar MinIO Console:
+#   http://localhost:9001
+#   User: minioadmin
+#   Password: minioadmin
+#
+# Acessar PostgreSQL:
+#   Host: localhost
+#   Port: 5432
+#   User: condominio_user
+#   Password: condominio_password
+#   Database: condominio_db
+#
+# Acessar Redis:
+#   Host: localhost
+#   Port: 6379
+#
+# ============================================
