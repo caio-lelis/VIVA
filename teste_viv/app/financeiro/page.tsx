@@ -66,6 +66,14 @@ function moveMonth(date: Date, offset: number): Date {
   return next
 }
 
+function isImageFile(fileName: string): boolean {
+  return /\.(png|jpe?g|webp|gif|bmp|svg)$/i.test(fileName)
+}
+
+function isPdfFile(fileName: string): boolean {
+  return /\.pdf$/i.test(fileName)
+}
+
 export default function FinanceiroPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [mesesDisponiveis, setMesesDisponiveis] = useState<string[]>([])
@@ -394,8 +402,24 @@ export default function FinanceiroPage() {
             {notas.map((nota) => (
               <Card key={nota.key} className="border-2 border-foreground rounded-sm">
                 <CardContent className="p-4">
-                  <div className="mb-3 flex h-20 items-center justify-center rounded-sm border-2 border-foreground bg-secondary">
-                    <ReceiptText className="h-8 w-8 text-foreground" />
+                  <div className="mb-3 h-28 overflow-hidden rounded-sm border-2 border-foreground bg-secondary">
+                    {isImageFile(nota.fileName) ? (
+                      <img
+                        src={`${API_BASE_URL}${nota.downloadPath}`}
+                        alt={nota.fileName}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : isPdfFile(nota.fileName) ? (
+                      <div className="flex h-full items-center justify-center gap-2 text-sm font-semibold text-foreground">
+                        <FileText className="h-5 w-5" />
+                        PDF
+                      </div>
+                    ) : (
+                      <div className="flex h-full items-center justify-center">
+                        <ReceiptText className="h-8 w-8 text-foreground" />
+                      </div>
+                    )}
                   </div>
                   <p className="truncate text-sm font-semibold text-foreground" title={nota.fileName}>
                     {nota.fileName}
