@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import re
 from datetime import datetime, timezone
@@ -28,6 +29,7 @@ AI_PROVIDER = os.getenv("AI_PROVIDER", "mock")
 
 DATE_REF_RE = re.compile(r"^(0[1-9]|1[0-2])-\d{4}$")
 AMOUNT_RE = re.compile(r"(\d+[\.,]\d{2})")
+PLANILHA_DEMO_STORE: dict[str, list[dict[str, str]]] = {}
 
 
 def _is_configured() -> bool:
@@ -69,6 +71,10 @@ def _sanitize_filename(filename: str) -> str:
 
 def _notes_prefix(date_ref: str) -> str:
     return f"notas_fiscais{date_ref}/"
+
+
+def _spreadsheet_key(date_ref: str) -> str:
+    return f"planilhas_financeiras/{date_ref}/planilha.json"
 
 
 def _format_size(size_bytes: int) -> str:
@@ -134,6 +140,44 @@ def _extract_amount(text: str) -> float | None:
     match = AMOUNT_RE.search(text)
     if not match:
         return None
+
+
+def _default_spreadsheet_rows() -> list[dict[str, str]]:
+    return [
+        {
+            "id": "1",
+            "dataEmissao": "",
+            "numeroNota": "",
+            "fornecedor": "",
+            "descricao": "",
+            "categoria": "",
+            "valor": "",
+            "observacoes": "",
+        }
+    ]
+
+
+def _normalize_spreadsheet_rows(rows: object) -> list[dict[str, str]]:
+    if not isinstance(rows, list):
+        raise HTTPException(status_code=400, detail="Formato invalido: rows deve ser uma lista")
+
+    normalized: list[dict[str, str]] = []
+    for index, row in enumerate(rows):
+        if not isinstance(row, dict):
+            continue
+        normalized.append(
+            {
+                "id": str(row.get("id") or str(index + 1)),
+                "dataEmissao": str(row.get("dataEmissao") or ""),
+                "numeroNota": str(row.get("numeroNota") or ""),
+                "fornecedor": str(row.get("fornecedor") or ""),
+                "descricao": str(row.get("descricao") or ""),
+                "categoria": str(row.get("categoria") or ""),
+                "valor": str(row.get("valor") or ""),
+                "observacoes": str(row.get("observacoes") or ""),
+            }
+        )
+    return normalized
     raw = match.group(1).replace(".", "").replace(",", ".")
     try:
         return float(raw)
@@ -223,6 +267,89 @@ def list_notas_fiscais(date_ref: str = Query(...)):
         return {"dateRef": parsed_date_ref, "directory": prefix, "items": items}
     except Exception as err:  # pragma: no cover
         raise HTTPException(status_code=500, detail=f"Erro ao listar notas fiscais: {err}") from err
+
+
+@router.get("/notas-fiscais/planilha")
+def get_nota_fiscal_spreadsheet(date_ref: str = Query(...)):
+    parsed_date_ref = _validate_date_ref(date_ref)
+    key = _spreadsheet_key(parsed_date_ref)
+    columns = [
+        {"key": "dataEmissao", "label": "Data Emissao"},
+        {"key": "numeroNota", "label": "Numero Nota"},
+        {"key": "fornecedor", "label": "Fornecedor"},
+        {"key": "descricao", "label": "Descricao"},
+        {"key": "categoria", "label": "Categoria"},
+        {"key": "valor", "label": "Valor (R$)"},
+        {"key": "observacoes", "label": "Observacoes"},
+    ]
+
+    if not _is_configured():
+        rows = PLANILHA_DEMO_STORE.get(parsed_date_ref, _default_spreadsheet_rows())
+        PLANILHA_DEMO_STORE[parsed_date_ref] = rows
+        return {"dateRef": parsed_date_ref, "key": key, "columns": columns, "rows": rows, "demo": True}
+
+    try:
+        client = _create_s3_client()
+        _ensure_bucket(client)
+
+        try:
+            response = client.get_object(Bucket=MINIO_BUCKET_NAME, Key=key)
+            body = response["Body"].read()
+            payload = json.loads(body.decode("utf-8"))
+            rows = _normalize_spreadsheet_rows(payload.get("rows", []))
+            if not rows:
+                rows = _default_spreadsheet_rows()
+        except ClientError as err:
+            code = str(err.response.get("Error", {}).get("Code", ""))
+            if code in {"NoSuchKey", "404", "NotFound"}:
+                rows = _default_spreadsheet_rows()
+            else:
+                raise
+
+        return {"dateRef": parsed_date_ref, "key": key, "columns": columns, "rows": rows}
+    except HTTPException:
+        raise
+    except Exception as err:  # pragma: no cover
+        raise HTTPException(status_code=500, detail=f"Erro ao carregar planilha: {err}") from err
+
+
+@router.put("/notas-fiscais/planilha")
+async def save_nota_fiscal_spreadsheet(date_ref: str = Query(...), payload: dict | None = None):
+    parsed_date_ref = _validate_date_ref(date_ref)
+    rows = _normalize_spreadsheet_rows((payload or {}).get("rows", []))
+    if not rows:
+        rows = _default_spreadsheet_rows()
+    key = _spreadsheet_key(parsed_date_ref)
+    content = json.dumps(
+        {
+            "dateRef": parsed_date_ref,
+            "updatedAt": datetime.now(tz=timezone.utc).isoformat(),
+            "rows": rows,
+        },
+        ensure_ascii=False,
+    ).encode("utf-8")
+
+    if not _is_configured():
+        PLANILHA_DEMO_STORE[parsed_date_ref] = rows
+        return {"success": True, "dateRef": parsed_date_ref, "key": key, "rows": rows, "demo": True}
+
+    try:
+        client = _create_s3_client()
+        _ensure_bucket(client)
+        client.put_object(
+            Bucket=MINIO_BUCKET_NAME,
+            Key=key,
+            Body=content,
+            ContentType="application/json",
+            Metadata={
+                "dateRef": parsed_date_ref,
+                "updatedAt": datetime.now(tz=timezone.utc).isoformat(),
+                "type": "planilha_notas_fiscais",
+            },
+        )
+        return {"success": True, "dateRef": parsed_date_ref, "key": key, "rows": rows}
+    except Exception as err:  # pragma: no cover
+        raise HTTPException(status_code=500, detail=f"Erro ao salvar planilha: {err}") from err
 
 
 @router.post("/notas-fiscais/upload")

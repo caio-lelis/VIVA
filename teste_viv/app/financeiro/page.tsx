@@ -13,9 +13,12 @@ import {
   FileText,
   Folder,
   Loader2,
+  Plus,
   ReceiptText,
   RefreshCcw,
+  Save,
   TableProperties,
+  Trash2,
   Upload,
 } from "lucide-react"
 import { API_BASE_URL, apiGet } from "@/lib/api"
@@ -46,6 +49,20 @@ type ReportResponse = {
     key: string
     downloadPath: string
   }
+}
+type PlanilhaRow = {
+  id: string
+  dataEmissao: string
+  numeroNota: string
+  fornecedor: string
+  descricao: string
+  categoria: string
+  valor: string
+  observacoes: string
+}
+type PlanilhaResponse = {
+  dateRef: string
+  rows: PlanilhaRow[]
 }
 
 function dateRefFromDate(date: Date): string {
@@ -86,6 +103,9 @@ export default function FinanceiroPage() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [lastReport, setLastReport] = useState<ReportResponse | null>(null)
+  const [planilhaRows, setPlanilhaRows] = useState<PlanilhaRow[]>([])
+  const [loadingPlanilha, setLoadingPlanilha] = useState(false)
+  const [savingPlanilha, setSavingPlanilha] = useState(false)
 
   const dateRef = useMemo(() => dateRefFromDate(currentDate), [currentDate])
 
@@ -110,13 +130,93 @@ export default function FinanceiroPage() {
     }
   }, [])
 
+  const loadPlanilha = useCallback(async (reference: string) => {
+    setLoadingPlanilha(true)
+    try {
+      const response = await apiGet<PlanilhaResponse>(`/api/financeiro/notas-fiscais/planilha?date_ref=${reference}`)
+      setPlanilhaRows(response.rows || [])
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Falha ao carregar planilha")
+      setPlanilhaRows([])
+    } finally {
+      setLoadingPlanilha(false)
+    }
+  }, [])
+
   useEffect(() => {
     void loadMeses()
   }, [loadMeses])
 
   useEffect(() => {
     void loadNotas(dateRef)
-  }, [dateRef, loadNotas])
+    void loadPlanilha(dateRef)
+  }, [dateRef, loadNotas, loadPlanilha])
+
+  const updatePlanilhaCell = (rowId: string, field: keyof Omit<PlanilhaRow, "id">, value: string) => {
+    setPlanilhaRows((rows) =>
+      rows.map((row) => {
+        if (row.id !== rowId) return row
+        return { ...row, [field]: value }
+      })
+    )
+  }
+
+  const addPlanilhaRow = () => {
+    setPlanilhaRows((rows) => [
+      ...rows,
+      {
+        id: `${Date.now()}-${rows.length + 1}`,
+        dataEmissao: "",
+        numeroNota: "",
+        fornecedor: "",
+        descricao: "",
+        categoria: "",
+        valor: "",
+        observacoes: "",
+      },
+    ])
+  }
+
+  const removePlanilhaRow = (rowId: string) => {
+    setPlanilhaRows((rows) => {
+      const next = rows.filter((row) => row.id !== rowId)
+      if (next.length > 0) return next
+      return [
+        {
+          id: `${Date.now()}-1`,
+          dataEmissao: "",
+          numeroNota: "",
+          fornecedor: "",
+          descricao: "",
+          categoria: "",
+          valor: "",
+          observacoes: "",
+        },
+      ]
+    })
+  }
+
+  const savePlanilha = async () => {
+    setSavingPlanilha(true)
+    setError("")
+    setSuccess("")
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/financeiro/notas-fiscais/planilha?date_ref=${dateRef}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rows: planilhaRows }),
+      })
+      if (!response.ok) {
+        const text = await response.text()
+        throw new Error(text || "Falha ao salvar planilha")
+      }
+      setSuccess(`Planilha de ${dateRef} salva com sucesso.`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao salvar planilha")
+    } finally {
+      setSavingPlanilha(false)
+    }
+  }
 
   const onUploadFiles = async (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(event.target.files || [])
@@ -286,6 +386,121 @@ export default function FinanceiroPage() {
                   </a>
                 </div>
               )}
+
+              <div className="mt-5 rounded-sm border-2 border-foreground bg-card p-3">
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Planilha mensal (estilo Excel)</p>
+                    <p className="text-xs text-muted-foreground">Edite os lancamentos do mes {dateRef} e salve</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button type="button" variant="outline" className="rounded-sm border-2 border-foreground" onClick={addPlanilhaRow}>
+                      <Plus className="h-4 w-4" />
+                      Linha
+                    </Button>
+                    <Button type="button" className="rounded-sm border-2 border-foreground" onClick={savePlanilha} disabled={savingPlanilha}>
+                      {savingPlanilha ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                      Salvar planilha
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="min-w-[980px] w-full border-collapse">
+                    <thead>
+                      <tr className="border-b-2 border-foreground">
+                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Data</th>
+                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Nota</th>
+                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Fornecedor</th>
+                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Descricao</th>
+                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Categoria</th>
+                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Valor</th>
+                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Observacoes</th>
+                        <th className="p-2 text-right text-xs font-semibold uppercase tracking-widest text-muted-foreground">Acao</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {loadingPlanilha && (
+                        <tr>
+                          <td colSpan={8} className="p-3 text-sm text-muted-foreground">
+                            Carregando planilha...
+                          </td>
+                        </tr>
+                      )}
+                      {!loadingPlanilha &&
+                        planilhaRows.map((row) => (
+                          <tr key={row.id} className="border-b border-muted">
+                            <td className="p-2">
+                              <input
+                                value={row.dataEmissao}
+                                onChange={(event) => updatePlanilhaCell(row.id, "dataEmissao", event.target.value)}
+                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                placeholder="dd/mm/aaaa"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                value={row.numeroNota}
+                                onChange={(event) => updatePlanilhaCell(row.id, "numeroNota", event.target.value)}
+                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                placeholder="Numero"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                value={row.fornecedor}
+                                onChange={(event) => updatePlanilhaCell(row.id, "fornecedor", event.target.value)}
+                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                placeholder="Fornecedor"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                value={row.descricao}
+                                onChange={(event) => updatePlanilhaCell(row.id, "descricao", event.target.value)}
+                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                placeholder="Descricao"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                value={row.categoria}
+                                onChange={(event) => updatePlanilhaCell(row.id, "categoria", event.target.value)}
+                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                placeholder="Categoria"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                value={row.valor}
+                                onChange={(event) => updatePlanilhaCell(row.id, "valor", event.target.value)}
+                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                placeholder="0,00"
+                              />
+                            </td>
+                            <td className="p-2">
+                              <input
+                                value={row.observacoes}
+                                onChange={(event) => updatePlanilhaCell(row.id, "observacoes", event.target.value)}
+                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                placeholder="Observacoes"
+                              />
+                            </td>
+                            <td className="p-2 text-right">
+                              <button
+                                type="button"
+                                onClick={() => removePlanilhaRow(row.id)}
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-sm border-2 border-foreground"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
