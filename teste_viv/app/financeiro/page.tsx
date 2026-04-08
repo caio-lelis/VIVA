@@ -246,7 +246,7 @@ export default function FinanceiroPage() {
       setSuccess(`${selectedFiles.length} arquivo(s) enviado(s) com sucesso para ${dateRef}.`)
       await Promise.all([loadNotas(dateRef), loadMeses()])
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao enviar arquivos")
+      setError(err instanceof Error ? err.message : "Falha ao enviar arquivos")
     } finally {
       setUploading(false)
       event.target.value = ""
@@ -287,7 +287,7 @@ export default function FinanceiroPage() {
         <section className="mb-8">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-primary">
                 <ReceiptText className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
@@ -300,20 +300,20 @@ export default function FinanceiroPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-sm border-2 border-foreground"
+                className="rounded-lg border border-border"
                 onClick={() => setCurrentDate((value) => moveMonth(value, -1))}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <div className="min-w-52 rounded-sm border-2 border-foreground bg-card px-4 py-2 text-center">
-                <p className="text-xs uppercase tracking-widest text-muted-foreground">Referencia</p>
+              <div className="min-w-52 rounded-lg border border-border bg-card px-4 py-2 text-center">
+                <p className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Referencia</p>
                 <p className="text-sm font-semibold text-foreground">{dateLabel(dateRef)}</p>
                 <p className="text-xs text-muted-foreground">{dateRef}</p>
               </div>
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-sm border-2 border-foreground"
+                className="rounded-lg border border-border"
                 onClick={() => setCurrentDate((value) => moveMonth(value, 1))}
               >
                 <ChevronRight className="h-4 w-4" />
@@ -323,10 +323,10 @@ export default function FinanceiroPage() {
         </section>
 
         <section className="mb-6 grid gap-4 lg:grid-cols-[1fr_280px]">
-          <Card className="border-2 border-foreground rounded-sm">
+          <Card className="border border-border rounded-lg">
             <CardContent className="p-4">
               <div className="flex flex-wrap items-center gap-3">
-                <label className="inline-flex cursor-pointer items-center gap-2 rounded-sm border-2 border-foreground bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
                   {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                   Enviar notas fiscais
                   <input type="file" multiple className="hidden" onChange={onUploadFiles} disabled={uploading} />
@@ -334,7 +334,7 @@ export default function FinanceiroPage() {
 
                 <Button
                   type="button"
-                  className="rounded-sm border-2 border-foreground"
+                  className="rounded-lg border border-border"
                   onClick={onGenerateReport}
                   disabled={generatingReport || notas.length === 0}
                 >
@@ -345,7 +345,7 @@ export default function FinanceiroPage() {
                 <Button
                   type="button"
                   variant="outline"
-                  className="rounded-sm border-2 border-foreground"
+                  className="rounded-lg border border-border"
                   onClick={() => {
                     void loadNotas(dateRef)
                     void loadMeses()
@@ -356,7 +356,7 @@ export default function FinanceiroPage() {
                   Atualizar
                 </Button>
 
-                <Badge className="rounded-sm border-2 border-foreground bg-secondary text-secondary-foreground">
+                <Badge className="rounded-lg border border-border bg-secondary text-secondary-foreground">
                   {notas.length} nota(s) no mes
                 </Badge>
               </div>
@@ -366,11 +366,11 @@ export default function FinanceiroPage() {
                 Diretorio MinIO: <span className="font-semibold text-foreground">{directory || `notas_fiscais${dateRef}/`}</span>
               </div>
 
-              {error && <p className="mt-3 rounded-sm border-2 border-destructive bg-red-50 px-3 py-2 text-sm text-destructive">{error}</p>}
-              {success && <p className="mt-3 rounded-sm border-2 border-green-700 bg-green-50 px-3 py-2 text-sm text-green-700">{success}</p>}
+              {error && <p className="mt-3 rounded-lg border border-destructive/30 bg-red-50 px-3 py-2 text-sm text-destructive">{error}</p>}
+              {success && <p className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{success}</p>}
 
               {lastReport?.success && lastReport.report && (
-                <div className="mt-3 rounded-sm border-2 border-foreground bg-secondary p-3">
+                <div className="mt-3 rounded-lg border border-border bg-secondary p-3">
                   <p className="text-sm font-semibold text-foreground">Ultimo relatorio</p>
                   <p className="text-xs text-muted-foreground mt-1">{lastReport.summary}</p>
                   <p className="text-xs text-muted-foreground mt-1">
@@ -380,25 +380,25 @@ export default function FinanceiroPage() {
                     href={`${API_BASE_URL}${lastReport.report.downloadPath}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-2 inline-flex rounded-sm border-2 border-foreground px-3 py-1.5 text-xs font-semibold text-foreground"
+                    className="mt-2 inline-flex rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
                   >
                     Baixar PDF
                   </a>
                 </div>
               )}
 
-              <div className="mt-5 rounded-sm border-2 border-foreground bg-card p-3">
+              <div className="mt-5 rounded-lg border border-border bg-card p-3">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <p className="text-sm font-semibold text-foreground">Planilha mensal (estilo Excel)</p>
                     <p className="text-xs text-muted-foreground">Edite os lancamentos do mes {dateRef} e salve</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button type="button" variant="outline" className="rounded-sm border-2 border-foreground" onClick={addPlanilhaRow}>
+                    <Button type="button" variant="outline" className="rounded-lg border border-border" onClick={addPlanilhaRow}>
                       <Plus className="h-4 w-4" />
                       Linha
                     </Button>
-                    <Button type="button" className="rounded-sm border-2 border-foreground" onClick={savePlanilha} disabled={savingPlanilha}>
+                    <Button type="button" className="rounded-lg border border-border" onClick={savePlanilha} disabled={savingPlanilha}>
                       {savingPlanilha ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                       Salvar planilha
                     </Button>
@@ -407,90 +407,90 @@ export default function FinanceiroPage() {
 
                 <div className="overflow-x-auto">
                   <table className="min-w-[980px] w-full border-collapse">
-                    <thead>
-                      <tr className="border-b-2 border-foreground">
-                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Data</th>
-                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Nota</th>
-                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Fornecedor</th>
-                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Descricao</th>
-                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Categoria</th>
-                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Valor</th>
-                        <th className="p-2 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Observacoes</th>
-                        <th className="p-2 text-right text-xs font-semibold uppercase tracking-widest text-muted-foreground">Acao</th>
+                    <thead className="bg-secondary/45">
+                      <tr className="border-b border-border">
+                        <th className="p-2.5 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Data</th>
+                        <th className="p-2.5 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Nota</th>
+                        <th className="p-2.5 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Fornecedor</th>
+                        <th className="p-2.5 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Descricao</th>
+                        <th className="p-2.5 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Categoria</th>
+                        <th className="p-2.5 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Valor</th>
+                        <th className="p-2.5 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Observacoes</th>
+                        <th className="p-2.5 text-right text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Acao</th>
                       </tr>
                     </thead>
                     <tbody>
                       {loadingPlanilha && (
                         <tr>
                           <td colSpan={8} className="p-3 text-sm text-muted-foreground">
-                            Carregando planilha...
+                            Carregando planilha do período...
                           </td>
                         </tr>
                       )}
                       {!loadingPlanilha &&
                         planilhaRows.map((row) => (
-                          <tr key={row.id} className="border-b border-muted">
-                            <td className="p-2">
+                          <tr key={row.id} className="border-b border-border/80">
+                            <td className="p-2.5">
                               <input
                                 value={row.dataEmissao}
                                 onChange={(event) => updatePlanilhaCell(row.id, "dataEmissao", event.target.value)}
-                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                className="h-8 w-full rounded-lg border border-border bg-background px-2 text-sm"
                                 placeholder="dd/mm/aaaa"
                               />
                             </td>
-                            <td className="p-2">
+                            <td className="p-2.5">
                               <input
                                 value={row.numeroNota}
                                 onChange={(event) => updatePlanilhaCell(row.id, "numeroNota", event.target.value)}
-                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                className="h-8 w-full rounded-lg border border-border bg-background px-2 text-sm"
                                 placeholder="Numero"
                               />
                             </td>
-                            <td className="p-2">
+                            <td className="p-2.5">
                               <input
                                 value={row.fornecedor}
                                 onChange={(event) => updatePlanilhaCell(row.id, "fornecedor", event.target.value)}
-                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                className="h-8 w-full rounded-lg border border-border bg-background px-2 text-sm"
                                 placeholder="Fornecedor"
                               />
                             </td>
-                            <td className="p-2">
+                            <td className="p-2.5">
                               <input
                                 value={row.descricao}
                                 onChange={(event) => updatePlanilhaCell(row.id, "descricao", event.target.value)}
-                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                className="h-8 w-full rounded-lg border border-border bg-background px-2 text-sm"
                                 placeholder="Descricao"
                               />
                             </td>
-                            <td className="p-2">
+                            <td className="p-2.5">
                               <input
                                 value={row.categoria}
                                 onChange={(event) => updatePlanilhaCell(row.id, "categoria", event.target.value)}
-                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                className="h-8 w-full rounded-lg border border-border bg-background px-2 text-sm"
                                 placeholder="Categoria"
                               />
                             </td>
-                            <td className="p-2">
+                            <td className="p-2.5">
                               <input
                                 value={row.valor}
                                 onChange={(event) => updatePlanilhaCell(row.id, "valor", event.target.value)}
-                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                className="h-8 w-full rounded-lg border border-border bg-background px-2 text-sm"
                                 placeholder="0,00"
                               />
                             </td>
-                            <td className="p-2">
+                            <td className="p-2.5">
                               <input
                                 value={row.observacoes}
                                 onChange={(event) => updatePlanilhaCell(row.id, "observacoes", event.target.value)}
-                                className="h-9 w-full rounded-sm border-2 border-foreground bg-background px-2 text-sm"
+                                className="h-8 w-full rounded-lg border border-border bg-background px-2 text-sm"
                                 placeholder="Observacoes"
                               />
                             </td>
-                            <td className="p-2 text-right">
+                            <td className="p-2.5 text-right">
                               <button
                                 type="button"
                                 onClick={() => removePlanilhaRow(row.id)}
-                                className="inline-flex h-9 w-9 items-center justify-center rounded-sm border-2 border-foreground"
+                                className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </button>
@@ -504,11 +504,11 @@ export default function FinanceiroPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-foreground rounded-sm">
+          <Card className="border border-border rounded-lg">
             <CardContent className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Meses com notas</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Meses com notas</p>
               <div className="mt-3 flex max-h-52 flex-col gap-2 overflow-auto pr-1">
-                {mesesDisponiveis.length === 0 && <p className="text-sm text-muted-foreground">Nenhum mes encontrado.</p>}
+                {mesesDisponiveis.length === 0 && <p className="text-sm text-muted-foreground">Nenhum mês disponível no histórico.</p>}
                 {mesesDisponiveis.map((item) => (
                   <button
                     key={item}
@@ -517,9 +517,9 @@ export default function FinanceiroPage() {
                       const [m, y] = item.split("-")
                       setCurrentDate(new Date(Number(y), Number(m) - 1, 1))
                     }}
-                    className={`rounded-sm border-2 px-3 py-2 text-left text-sm ${item === dateRef
-                        ? "border-foreground bg-primary text-primary-foreground"
-                        : "border-foreground bg-card text-foreground"
+                    className={`rounded-lg border px-3 py-2 text-left text-sm ${item === dateRef
+                        ? "border-primary/40 bg-primary text-primary-foreground"
+                        : "border-border bg-card text-foreground hover:border-primary/30"
                       }`}
                   >
                     {dateLabel(item)}
@@ -534,7 +534,7 @@ export default function FinanceiroPage() {
           <Button
             type="button"
             variant={viewMode === "tabela" ? "default" : "outline"}
-            className="rounded-sm border-2 border-foreground"
+            className="rounded-lg border border-border"
             onClick={() => setViewMode("tabela")}
           >
             <TableProperties className="h-4 w-4" />
@@ -543,7 +543,7 @@ export default function FinanceiroPage() {
           <Button
             type="button"
             variant={viewMode === "visual" ? "default" : "outline"}
-            className="rounded-sm border-2 border-foreground"
+            className="rounded-lg border border-border"
             onClick={() => setViewMode("visual")}
           >
             <Eye className="h-4 w-4" />
@@ -552,47 +552,47 @@ export default function FinanceiroPage() {
         </section>
 
         {loading ? (
-          <Card className="border-2 border-foreground rounded-sm">
+          <Card className="border border-border rounded-lg">
             <CardContent className="flex items-center gap-2 p-5 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Carregando notas fiscais...
+              Carregando notas fiscais do período...
             </CardContent>
           </Card>
         ) : null}
 
         {!loading && viewMode === "tabela" && (
-          <Card className="border-2 border-foreground rounded-sm">
+          <Card className="border border-border rounded-lg">
             <CardContent className="p-0">
               <table className="w-full">
-                <thead>
-                  <tr className="border-b-2 border-foreground">
-                    <th className="p-4 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Arquivo</th>
-                    <th className="p-4 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Tamanho</th>
-                    <th className="p-4 text-left text-xs font-semibold uppercase tracking-widest text-muted-foreground">Enviado em</th>
-                    <th className="p-4 text-right text-xs font-semibold uppercase tracking-widest text-muted-foreground">Acao</th>
+                <thead className="bg-secondary/45">
+                      <tr className="border-b border-border">
+                    <th className="p-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Arquivo</th>
+                    <th className="p-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Tamanho</th>
+                    <th className="p-3 text-left text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Enviado em</th>
+                    <th className="p-3 text-right text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Acao</th>
                   </tr>
                 </thead>
                 <tbody>
                   {notas.length === 0 && (
                     <tr>
                       <td colSpan={4} className="p-6 text-center text-sm text-muted-foreground">
-                        Nenhuma nota fiscal para {dateRef}.
+                        Nenhum registro de nota fiscal para {dateRef}.
                       </td>
                     </tr>
                   )}
                   {notas.map((nota) => (
-                    <tr key={nota.key} className="border-b border-muted last:border-0">
-                      <td className="p-4 text-sm font-medium text-foreground">{nota.fileName}</td>
-                      <td className="p-4 text-sm text-muted-foreground">{nota.sizeLabel}</td>
-                      <td className="p-4 text-sm text-muted-foreground">
+                    <tr key={nota.key} className="border-b border-border/80 last:border-0">
+                      <td className="p-3 text-sm font-medium text-foreground">{nota.fileName}</td>
+                      <td className="p-3 text-sm text-muted-foreground">{nota.sizeLabel}</td>
+                      <td className="p-3 text-sm text-muted-foreground">
                         {nota.lastModified ? new Date(nota.lastModified).toLocaleString("pt-BR") : "-"}
                       </td>
-                      <td className="p-4 text-right">
+                      <td className="p-3 text-right">
                         <a
                           href={`${API_BASE_URL}${nota.downloadPath}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex rounded-sm border-2 border-foreground px-3 py-1.5 text-xs font-semibold text-foreground"
+                          className="inline-flex rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
                         >
                           Baixar
                         </a>
@@ -608,16 +608,16 @@ export default function FinanceiroPage() {
         {!loading && viewMode === "visual" && (
           <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {notas.length === 0 && (
-              <Card className="border-2 border-foreground rounded-sm sm:col-span-2 lg:col-span-3">
+              <Card className="border border-border rounded-lg sm:col-span-2 lg:col-span-3">
                 <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                  Nenhuma nota fiscal para {dateRef}.
+                  Nenhum registro de nota fiscal para {dateRef}.
                 </CardContent>
               </Card>
             )}
             {notas.map((nota) => (
-              <Card key={nota.key} className="border-2 border-foreground rounded-sm">
+              <Card key={nota.key} className="border border-border rounded-lg">
                 <CardContent className="p-4">
-                  <div className="mb-3 h-28 overflow-hidden rounded-sm border-2 border-foreground bg-secondary">
+                  <div className="mb-3 h-28 overflow-hidden rounded-lg border border-border bg-secondary">
                     {isImageFile(nota.fileName) ? (
                       <img
                         src={`${API_BASE_URL}${nota.downloadPath}`}
@@ -648,7 +648,7 @@ export default function FinanceiroPage() {
                     href={`${API_BASE_URL}${nota.downloadPath}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 inline-flex rounded-sm border-2 border-foreground px-3 py-1.5 text-xs font-semibold text-foreground"
+                    className="mt-3 inline-flex rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground"
                   >
                     Abrir arquivo
                   </a>

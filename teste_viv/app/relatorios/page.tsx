@@ -36,7 +36,7 @@ interface VisaoGeral {
 
 const categoryConfig = {
   consumo: { icon: Droplet, color: "bg-blue-100 text-blue-700 border-blue-300" },
-  financeiro: { icon: DollarSign, color: "bg-green-100 text-green-700 border-green-300" },
+  financeiro: { icon: DollarSign, color: "bg-green-100 text-emerald-700 border-green-300" },
   manutencao: { icon: Wrench, color: "bg-orange-100 text-orange-700 border-orange-300" },
 }
 
@@ -73,7 +73,7 @@ export default function RelatoriosPage() {
       <main className="mx-auto max-w-5xl px-4 py-10">
         <section className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-primary">
               <BarChart3 className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
@@ -85,15 +85,15 @@ export default function RelatoriosPage() {
 
         <section className="mb-6">
           <div className="flex gap-2">
-            <Button variant={activeTab === "visao-geral" ? "default" : "outline"} onClick={() => setActiveTab("visao-geral")} className="rounded-sm border-2 border-foreground">Visao Geral</Button>
-            <Button variant={activeTab === "relatorios" ? "default" : "outline"} onClick={() => setActiveTab("relatorios")} className="rounded-sm border-2 border-foreground">Relatorios</Button>
+            <Button variant={activeTab === "visao-geral" ? "default" : "outline"} onClick={() => setActiveTab("visao-geral")} className="rounded-lg border border-border">Visao Geral</Button>
+            <Button variant={activeTab === "relatorios" ? "default" : "outline"} onClick={() => setActiveTab("relatorios")} className="rounded-lg border border-border">Relatorios</Button>
           </div>
         </section>
 
         {activeTab === "visao-geral" && visaoGeral && (
           <div className="space-y-6">
             <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card className="border-2 border-foreground rounded-sm">
+              <Card className="border border-border rounded-lg">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -104,14 +104,14 @@ export default function RelatoriosPage() {
                         {Math.abs(visaoGeral.stats.aguaVariacaoPct).toFixed(1)}% vs mes anterior
                       </div>
                     </div>
-                    <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-blue-100 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-lg border border-border bg-blue-100 flex items-center justify-center">
                       <Droplet className="h-5 w-5 text-blue-700" />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-foreground rounded-sm">
+              <Card className="border border-border rounded-lg">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -122,14 +122,14 @@ export default function RelatoriosPage() {
                         {Math.abs(visaoGeral.stats.energiaVariacaoPct).toFixed(1)}% vs mes anterior
                       </div>
                     </div>
-                    <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-yellow-100 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-lg border border-border bg-yellow-100 flex items-center justify-center">
                       <Zap className="h-5 w-5 text-yellow-700" />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-foreground rounded-sm">
+              <Card className="border border-border rounded-lg">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -137,14 +137,14 @@ export default function RelatoriosPage() {
                       <p className="text-2xl font-bold text-foreground mt-1">{visaoGeral.stats.manutencoesMes}</p>
                       <p className="text-xs text-muted-foreground mt-1">no mes</p>
                     </div>
-                    <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-orange-100 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-lg border border-border bg-orange-100 flex items-center justify-center">
                       <Wrench className="h-5 w-5 text-orange-700" />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-foreground rounded-sm">
+              <Card className="border border-border rounded-lg">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
@@ -152,8 +152,8 @@ export default function RelatoriosPage() {
                       <p className="text-2xl font-bold text-foreground mt-1">R$ {visaoGeral.stats.saldoCaixa.toLocaleString("pt-BR")}</p>
                       <p className="text-xs text-muted-foreground mt-1">caixa atual</p>
                     </div>
-                    <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-green-100 flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-green-700" />
+                    <div className="h-10 w-10 rounded-lg border border-border bg-green-100 flex items-center justify-center">
+                      <DollarSign className="h-5 w-5 text-emerald-700" />
                     </div>
                   </div>
                 </CardContent>
@@ -161,7 +161,7 @@ export default function RelatoriosPage() {
             </section>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <Card className="border-2 border-foreground rounded-sm">
+              <Card className="border border-border rounded-lg">
                 <CardContent className="p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold text-foreground flex items-center gap-2">
@@ -173,7 +173,7 @@ export default function RelatoriosPage() {
                   <div className="flex items-end gap-2 h-40">
                     {consumoData.map((d) => (
                       <div key={d.month} className="flex-1 flex flex-col items-center gap-1">
-                        <div className="w-full bg-blue-500 rounded-t-sm border-2 border-foreground" style={{ height: `${(d.agua / maxAgua) * 100}%` }} />
+                        <div className="w-full bg-blue-500 rounded-t-sm border border-border" style={{ height: `${(d.agua / maxAgua) * 100}%` }} />
                         <span className="text-xs text-muted-foreground">{d.month}</span>
                       </div>
                     ))}
@@ -181,7 +181,7 @@ export default function RelatoriosPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-2 border-foreground rounded-sm">
+              <Card className="border border-border rounded-lg">
                 <CardContent className="p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold text-foreground flex items-center gap-2">
@@ -193,7 +193,7 @@ export default function RelatoriosPage() {
                   <div className="flex items-end gap-2 h-40">
                     {consumoData.map((d) => (
                       <div key={d.month} className="flex-1 flex flex-col items-center gap-1">
-                        <div className="w-full bg-yellow-500 rounded-t-sm border-2 border-foreground" style={{ height: `${(d.energia / maxEnergia) * 100}%` }} />
+                        <div className="w-full bg-yellow-500 rounded-t-sm border border-border" style={{ height: `${(d.energia / maxEnergia) * 100}%` }} />
                         <span className="text-xs text-muted-foreground">{d.month}</span>
                       </div>
                     ))}
@@ -211,11 +211,11 @@ export default function RelatoriosPage() {
               const CategoryIcon = category.icon
 
               return (
-                <Card key={relatorio.id} className="border-2 border-foreground rounded-sm hover:shadow-[3px_3px_0px_0px] hover:shadow-foreground transition-all">
+                <Card key={relatorio.id} className="border border-border rounded-lg hover:shadow-md transition-all">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between flex-wrap gap-4">
                       <div className="flex items-center gap-4">
-                        <div className={`h-12 w-12 rounded-sm border-2 border-foreground flex items-center justify-center ${category.color.split(" ")[0]}`}>
+                        <div className={`h-12 w-12 rounded-lg border border-border flex items-center justify-center ${category.color.split(" ")[0]}`}>
                           <CategoryIcon className={`h-6 w-6 ${category.color.split(" ")[1]}`} />
                         </div>
                         <div>
@@ -234,7 +234,7 @@ export default function RelatoriosPage() {
                         </div>
                       </div>
 
-                      <Button size="sm" className="border-2 border-foreground rounded-sm gap-1">
+                      <Button size="sm" className="border border-border rounded-lg gap-1">
                         <Download className="h-4 w-4" />
                         Baixar PDF
                       </Button>

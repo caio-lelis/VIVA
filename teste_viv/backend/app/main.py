@@ -15,6 +15,7 @@ from app.routers.chamados import router as chamados_router
 from app.routers.dashboard import router as dashboard_router
 from app.routers.enquetes import router as enquetes_router
 from app.routers.financeiro import router as financeiro_router
+from app.routers.infraestrutura import router as infraestrutura_router
 from app.routers.moradores import router as moradores_router
 from app.routers.relatorios import router as relatorios_router
 from app.routers.reservas import router as reservas_router
@@ -40,6 +41,7 @@ app.include_router(avisos_router)
 app.include_router(chamados_router)
 app.include_router(enquetes_router)
 app.include_router(financeiro_router)
+app.include_router(infraestrutura_router)
 app.include_router(moradores_router)
 app.include_router(reservas_router)
 app.include_router(relatorios_router)

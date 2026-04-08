@@ -16,6 +16,7 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
+  Image,
   type LucideIcon,
 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -48,7 +49,7 @@ type DashboardResponse = {
 }
 type Role = "admin" | "morador"
 
-const adminOnlyModuleHrefs = new Set(["/financeiro", "/moradores", "/relatorios"])
+const adminOnlyModuleHrefs = new Set(["/financeiro", "/moradores", "/relatorios", "/infraestrutura"])
 
 const defaultModules: ModuleItem[] = [
   { href: "/upload", title: "Documentos", description: "Envie e gerencie atas, contratos, boletos e demais arquivos do condomínio.", badge: null, available: true },
@@ -59,6 +60,7 @@ const defaultModules: ModuleItem[] = [
   { href: "/moradores", title: "Moradores", description: "Diretório de moradores, visitantes autorizados e veículos cadastrados.", badge: null, available: true },
   { href: "/enquetes", title: "Enquetes e Votações", description: "Participe de enquetes e votações sobre decisões do condomínio.", badge: "1 ativa", available: true },
   { href: "/relatorios", title: "Relatórios", description: "Visualize relatórios de consumo, manutenções e outras métricas.", badge: null, available: true },
+  { href: "/infraestrutura", title: "Infraestrutura da Home", description: "Gerencie imagens e descrições da página pública de infraestrutura.", badge: "admin", available: true },
 ]
 
 const defaultActivity: ActivityItem[] = [
@@ -77,12 +79,13 @@ const iconByModule: Record<string, LucideIcon> = {
   "/moradores": Users,
   "/enquetes": MessageSquare,
   "/relatorios": BarChart3,
+  "/infraestrutura": Image,
 }
 
 const iconByActivityType: Record<ActivityItem["type"], { icon: LucideIcon; color: string }> = {
-  success: { icon: CheckCircle2, color: "text-green-600" },
+  success: { icon: CheckCircle2, color: "text-emerald-700" },
   warning: { icon: AlertCircle, color: "text-accent" },
-  info: { icon: Bell, color: "text-foreground" },
+  info: { icon: Bell, color: "text-primary" },
   neutral: { icon: Clock, color: "text-muted-foreground" },
 }
 
@@ -145,16 +148,16 @@ export default function HubPage() {
     <div className="min-h-screen bg-background">
       <Header activePage="inicio" />
 
-      <main className="mx-auto max-w-6xl px-4 py-10">
-        <section className="mb-10 flex flex-col gap-1">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">Portal do Condomínio</p>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground text-balance md:text-4xl">Bem-vindo ao seu Portal</h2>
-          <p className="mt-1 max-w-xl text-base leading-relaxed text-muted-foreground">Acesse todos os serviços e funcionalidades do seu condomínio em um só lugar.</p>
+      <main className="mx-auto max-w-6xl px-4 py-10 md:px-6">
+        <section className="mb-10 rounded-2xl border border-border bg-card p-6 md:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">Portal do Condomínio</p>
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight text-foreground text-balance md:text-4xl">Bem-vindo ao portal de serviços</h2>
+          <p className="mt-2 max-w-2xl text-base leading-relaxed text-muted-foreground">Acesse todos os serviços e funcionalidades do condomínio em um único ambiente.</p>
           <p className="mt-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
             Perfil ativo: {role === "admin" ? "Administrador" : "Morador"}
           </p>
           {acessoNegado && (
-            <p className="mt-3 rounded-sm border-2 border-destructive bg-red-50 px-3 py-2 text-sm text-destructive">
+            <p className="mt-3 rounded-lg border border-destructive/30 bg-red-50 px-3 py-2 text-sm text-destructive">
               Você não tem permissão para acessar esse módulo.
             </p>
           )}
@@ -170,18 +173,18 @@ export default function HubPage() {
                   <Card
                     key={mod.href}
                     className={[
-                      "group border-2 border-foreground rounded-sm transition-all duration-150",
+                      "group rounded-xl border border-border bg-card py-0 shadow-sm transition-all duration-150",
                       mod.available
-                        ? "cursor-pointer shadow-[3px_3px_0px_0px] shadow-foreground hover:shadow-[5px_5px_0px_0px] hover:shadow-foreground hover:-translate-y-0.5 hover:-translate-x-0.5"
+                        ? "cursor-pointer hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
                         : "opacity-50 cursor-not-allowed",
                     ].join(" ")}
                   >
                     <CardContent className="flex flex-col gap-3 p-5">
                       <div className="flex items-start justify-between">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
-                          <Icon className="h-5 w-5 text-primary-foreground" />
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary text-primary">
+                          <Icon className="h-5 w-5 text-primary" />
                         </div>
-                        {mod.badge && <Badge className="rounded-sm border-2 border-foreground bg-accent text-accent-foreground text-xs font-semibold">{mod.badge}</Badge>}
+                        {mod.badge && <Badge className="rounded-md border border-border bg-secondary text-foreground text-xs font-semibold">{mod.badge}</Badge>}
                         {!mod.available && <span className="text-xs text-muted-foreground font-medium">Em breve</span>}
                       </div>
                       <div>
@@ -198,7 +201,7 @@ export default function HubPage() {
                 )
 
                 return mod.available ? (
-                  <Link key={mod.href} href={mod.href} className="outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
+                  <Link key={mod.href} href={mod.href} className="rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring">
                     {card}
                   </Link>
                 ) : (
@@ -209,12 +212,12 @@ export default function HubPage() {
           </section>
 
           <aside className="flex flex-col gap-4">
-            <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground">
-              <CardContent className="p-5">
+            <Card className="rounded-xl border border-border py-0 shadow-sm">
+              <CardContent className="p-5 md:p-6">
                 <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Resumo do Condomínio</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {stats.map((stat) => (
-                    <div key={stat.label} className="rounded-sm border-2 border-foreground bg-secondary p-3">
+                    <div key={stat.label} className="rounded-lg border border-border bg-background p-3">
                       <p className="text-xl font-bold text-foreground leading-none">{stat.value}</p>
                       <p className="mt-1 text-xs text-muted-foreground leading-snug">{stat.label}</p>
                     </div>
@@ -223,8 +226,8 @@ export default function HubPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground">
-              <CardContent className="p-5">
+            <Card className="rounded-xl border border-border py-0 shadow-sm">
+              <CardContent className="p-5 md:p-6">
                 <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">Atividade Recente</h3>
                 <ul className="flex flex-col gap-3">
                   {recentActivity.map((item) => {
@@ -244,11 +247,11 @@ export default function HubPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-2 border-foreground rounded-sm bg-primary">
-              <CardContent className="p-5">
+            <Card className="rounded-xl border border-border bg-primary py-0 shadow-sm">
+              <CardContent className="p-5 md:p-6">
                 <p className="text-sm font-semibold text-primary-foreground">Precisa de ajuda?</p>
-                <p className="mt-1 text-xs text-primary-foreground/70 leading-relaxed">Entre em contato com a administração pelo ramal 100 ou pelo e-mail do condomínio.</p>
-                <div className="mt-3 inline-flex items-center gap-1 rounded-sm border-2 border-primary-foreground px-3 py-1.5 text-xs font-semibold text-primary-foreground">
+                <p className="mt-1 text-xs text-primary-foreground/80 leading-relaxed">Entre em contato com a administração pelo ramal 100 ou pelo e-mail do condomínio.</p>
+                <div className="mt-3 inline-flex items-center gap-1 rounded-md border border-primary-foreground/40 px-3 py-1.5 text-xs font-semibold text-primary-foreground">
                   Contato <ArrowRight className="h-3 w-3" />
                 </div>
               </CardContent>
@@ -256,7 +259,7 @@ export default function HubPage() {
           </aside>
         </div>
 
-        <footer className="mt-12 border-t-2 border-foreground pt-6 text-center">
+        <footer className="mt-12 border-t border-border pt-6 text-center">
           <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} LegoTech. Todos os direitos reservados.</p>
         </footer>
       </main>

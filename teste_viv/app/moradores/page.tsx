@@ -83,7 +83,7 @@ export default function MoradoresPage() {
         <section className="mb-8">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-primary">
                 <Users className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
@@ -91,7 +91,7 @@ export default function MoradoresPage() {
                 <p className="text-sm text-muted-foreground">{summary.totalMoradores} moradores cadastrados</p>
               </div>
             </div>
-            <Button className="border-2 border-foreground rounded-sm gap-2">
+            <Button className="border border-border rounded-lg gap-2">
               <UserPlus className="h-4 w-4" />
               Cadastrar Visitante
             </Button>
@@ -99,9 +99,9 @@ export default function MoradoresPage() {
         </section>
 
         <section className="grid gap-4 sm:grid-cols-3 mb-8">
-          <Card className="border-2 border-foreground rounded-sm">
+          <Card className="border border-border rounded-lg">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-secondary flex items-center justify-center">
+              <div className="h-10 w-10 rounded-lg border border-border bg-secondary flex items-center justify-center">
                 <Users className="h-5 w-5 text-foreground" />
               </div>
               <div>
@@ -111,9 +111,9 @@ export default function MoradoresPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-foreground rounded-sm">
+          <Card className="border border-border rounded-lg">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-secondary flex items-center justify-center">
+              <div className="h-10 w-10 rounded-lg border border-border bg-secondary flex items-center justify-center">
                 <Home className="h-5 w-5 text-foreground" />
               </div>
               <div>
@@ -123,9 +123,9 @@ export default function MoradoresPage() {
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-foreground rounded-sm">
+          <Card className="border border-border rounded-lg">
             <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-secondary flex items-center justify-center">
+              <div className="h-10 w-10 rounded-lg border border-border bg-secondary flex items-center justify-center">
                 <Car className="h-5 w-5 text-foreground" />
               </div>
               <div>
@@ -139,12 +139,12 @@ export default function MoradoresPage() {
         <section className="mb-6 flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Buscar por nome, apartamento ou placa..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10 border-2 border-foreground rounded-sm" />
+            <Input placeholder="Buscar por nome, apartamento ou placa..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10 border border-border rounded-lg" />
           </div>
           <div className="flex gap-2">
-            <Button variant={filterBlock === "todos" ? "default" : "outline"} size="sm" onClick={() => setFilterBlock("todos")} className="rounded-sm border-2 border-foreground">Todos</Button>
+            <Button variant={filterBlock === "todos" ? "default" : "outline"} size="sm" onClick={() => setFilterBlock("todos")} className="rounded-lg border border-border">Todos</Button>
             {summary.blocks.map((block) => (
-              <Button key={block} variant={filterBlock === block ? "default" : "outline"} size="sm" onClick={() => setFilterBlock(block)} className="rounded-sm border-2 border-foreground">
+              <Button key={block} variant={filterBlock === block ? "default" : "outline"} size="sm" onClick={() => setFilterBlock(block)} className="rounded-lg border border-border">
                 Bloco {block}
               </Button>
             ))}
@@ -158,19 +158,19 @@ export default function MoradoresPage() {
                 <Card
                   key={morador.id}
                   onClick={() => setSelectedMoradorId(morador.id)}
-                  className={`cursor-pointer border-2 border-foreground rounded-sm transition-all hover:shadow-[3px_3px_0px_0px] hover:shadow-foreground ${selectedMoradorId === morador.id ? "shadow-[3px_3px_0px_0px] shadow-foreground bg-secondary" : ""}`}
+                  className={`cursor-pointer border border-border rounded-lg transition-all hover:shadow-md ${selectedMoradorId === morador.id ? "shadow-sm bg-secondary" : ""}`}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-sm border-2 border-foreground bg-primary flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-lg border border-border bg-primary flex items-center justify-center">
                           <span className="text-sm font-bold text-primary-foreground">{morador.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}</span>
                         </div>
                         <div>
                           <h4 className="font-semibold text-foreground">{morador.name}</h4>
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-sm text-muted-foreground">Bloco {morador.block} - Ap. {morador.unit}</span>
-                            <Badge className={`text-xs rounded-sm border ${typeConfig[morador.type].color}`}>{typeConfig[morador.type].label}</Badge>
+                            <Badge className={`text-xs rounded-lg border ${typeConfig[morador.type].color}`}>{typeConfig[morador.type].label}</Badge>
                           </div>
                         </div>
                       </div>
@@ -180,25 +180,25 @@ export default function MoradoresPage() {
                 </Card>
               ))
             ) : (
-              <div className="text-center py-12 text-muted-foreground">Nenhum morador encontrado.</div>
+              <div className="text-center py-12 text-muted-foreground">Nenhum registro disponível para os critérios informados.</div>
             )}
           </section>
 
           <aside>
             {selectedMorador ? (
-              <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground sticky top-4">
+              <Card className="border border-border rounded-lg shadow-sm sticky top-4">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="h-14 w-14 rounded-sm border-2 border-foreground bg-primary flex items-center justify-center">
+                    <div className="h-14 w-14 rounded-lg border border-border bg-primary flex items-center justify-center">
                       <span className="text-lg font-bold text-primary-foreground">{selectedMorador.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}</span>
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-foreground">{selectedMorador.name}</h3>
-                      <Badge className={`text-xs rounded-sm border ${typeConfig[selectedMorador.type].color}`}>{typeConfig[selectedMorador.type].label}</Badge>
+                      <Badge className={`text-xs rounded-lg border ${typeConfig[selectedMorador.type].color}`}>{typeConfig[selectedMorador.type].label}</Badge>
                     </div>
                   </div>
 
-                  <div className="space-y-3 text-sm border-t-2 border-foreground pt-4">
+                  <div className="space-y-3 text-sm border-t border-border pt-4">
                     <div className="flex items-center gap-2">
                       <Home className="h-4 w-4 text-muted-foreground" />
                       <span className="text-foreground">Bloco {selectedMorador.block} - Ap. {selectedMorador.unit}</span>
@@ -214,13 +214,13 @@ export default function MoradoresPage() {
                   </div>
 
                   {selectedMorador.vehicles.length > 0 && (
-                    <div className="border-t-2 border-foreground pt-4 mt-4">
+                    <div className="border-t border-border pt-4 mt-4">
                       <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-1">
                         <Car className="h-3 w-3" /> Veiculos ({selectedMorador.vehicles.length})
                       </p>
                       <ul className="space-y-2">
                         {selectedMorador.vehicles.map((v, i) => (
-                          <li key={i} className="text-sm text-foreground bg-secondary p-2 rounded-sm border border-foreground">
+                          <li key={i} className="rounded-lg border border-border bg-secondary p-2 text-sm text-foreground">
                             <span className="font-semibold">{v.plate}</span>
                             <br />
                             <span className="text-muted-foreground">{v.model}</span>
@@ -232,10 +232,10 @@ export default function MoradoresPage() {
                 </CardContent>
               </Card>
             ) : (
-              <Card className="border-2 border-dashed border-muted-foreground rounded-sm">
+              <Card className="border border-dashed border-muted-foreground rounded-lg">
                 <CardContent className="p-5 text-center">
                   <Users className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Selecione um morador para ver os detalhes</p>
+                  <p className="text-sm text-muted-foreground">Selecione um morador para consultar os detalhes</p>
                 </CardContent>
               </Card>
             )}

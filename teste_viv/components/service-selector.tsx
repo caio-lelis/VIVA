@@ -105,26 +105,26 @@ export function ServiceSelector({ selected, onSelect }: ServiceSelectorProps) {
             key={service.id}
             onClick={() => onSelect(service)}
             className={cn(
-              "group flex flex-col gap-3 rounded-sm border-2 p-4 text-left transition-all",
+              "group flex flex-col gap-3 rounded-xl border p-4 text-left transition-all",
               isSelected
-                ? "border-foreground bg-foreground text-background shadow-[4px_4px_0px_0px] shadow-accent"
-                : "border-foreground/30 bg-card hover:border-foreground hover:shadow-[4px_4px_0px_0px] hover:shadow-foreground"
+                ? "border-primary/40 bg-secondary text-foreground shadow-sm"
+                : "border-border bg-card hover:border-primary/30 hover:shadow-sm"
             )}
           >
             <div
               className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-sm border-2 transition-colors",
+                "flex h-10 w-10 items-center justify-center rounded-lg border transition-colors",
                 isSelected
-                  ? "border-background/30 bg-accent"
-                  : "border-foreground/20 bg-secondary group-hover:border-foreground group-hover:bg-accent"
+                  ? "border-primary/30 bg-primary"
+                  : "border-border bg-secondary group-hover:border-primary/30 group-hover:bg-secondary"
               )}
             >
               <Icon
                 className={cn(
                   "h-5 w-5 transition-colors",
                   isSelected
-                    ? "text-accent-foreground"
-                    : "text-foreground group-hover:text-accent-foreground"
+                    ? "text-primary-foreground"
+                    : "text-foreground group-hover:text-primary"
                 )}
               />
             </div>
@@ -132,7 +132,7 @@ export function ServiceSelector({ selected, onSelect }: ServiceSelectorProps) {
               <p
                 className={cn(
                   "text-sm font-semibold leading-tight",
-                  isSelected ? "text-background" : "text-foreground"
+                  isSelected ? "text-foreground" : "text-foreground"
                 )}
               >
                 {service.label}
@@ -140,7 +140,7 @@ export function ServiceSelector({ selected, onSelect }: ServiceSelectorProps) {
               <p
                 className={cn(
                   "mt-1 text-xs leading-relaxed",
-                  isSelected ? "text-background/70" : "text-muted-foreground"
+                  isSelected ? "text-muted-foreground" : "text-muted-foreground"
                 )}
               >
                 {service.description}

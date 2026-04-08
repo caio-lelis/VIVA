@@ -33,7 +33,7 @@ interface ChamadosResponse {
 const statusConfig: Record<ChamadoStatus, { icon: typeof Clock; label: string; color: string }> = {
   aberto: { icon: AlertCircle, label: "Aberto", color: "bg-yellow-100 text-yellow-700 border-yellow-300" },
   em_andamento: { icon: Clock, label: "Em andamento", color: "bg-blue-100 text-blue-700 border-blue-300" },
-  concluido: { icon: CheckCircle2, label: "Concluido", color: "bg-green-100 text-green-700 border-green-300" },
+  concluido: { icon: CheckCircle2, label: "Concluido", color: "bg-green-100 text-emerald-700 border-green-300" },
   cancelado: { icon: XCircle, label: "Cancelado", color: "bg-red-100 text-red-700 border-red-300" },
 }
 
@@ -41,7 +41,7 @@ const categoryConfig: Record<ChamadoCategory, { label: string; color: string }> 
   hidraulica: { label: "Hidraulica", color: "bg-blue-500" },
   eletrica: { label: "Eletrica", color: "bg-yellow-500" },
   estrutural: { label: "Estrutural", color: "bg-orange-500" },
-  limpeza: { label: "Limpeza", color: "bg-green-500" },
+  limpeza: { label: "Limpeza", color: "bg-emerald-500" },
   outros: { label: "Outros", color: "bg-gray-500" },
 }
 
@@ -120,15 +120,15 @@ export default function ChamadosPage() {
         <section className="mb-8">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-primary">
                 <Wrench className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-foreground">Chamados de Manutencao</h1>
-                <p className="text-sm text-muted-foreground">{openCount > 0 ? `${openCount} chamado(s) em aberto` : "Nenhum chamado em aberto"}</p>
+                <p className="text-sm text-muted-foreground">{openCount > 0 ? `${openCount} chamado(s) em aberto` : "Nenhum chamado aberto no momento"}</p>
               </div>
             </div>
-            <Button onClick={() => setShowNewForm(!showNewForm)} className="border-2 border-foreground rounded-sm gap-2">
+            <Button onClick={() => setShowNewForm(!showNewForm)} className="border border-border rounded-lg gap-2">
               <Plus className="h-4 w-4" />
               Novo Chamado
             </Button>
@@ -136,13 +136,13 @@ export default function ChamadosPage() {
         </section>
 
         {showNewForm && (
-          <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground mb-6">
+          <Card className="border border-border rounded-lg shadow-sm mb-6">
             <CardContent className="p-5">
               <h3 className="font-semibold text-foreground mb-4">Abrir Novo Chamado</h3>
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-foreground">Titulo</label>
-                  <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Vazamento na torneira" className="mt-1 border-2 border-foreground rounded-sm" />
+                  <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Vazamento na torneira" className="mt-1 border border-border rounded-lg" />
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground">Categoria</label>
@@ -152,7 +152,7 @@ export default function ChamadosPage() {
                         key={cat}
                         variant={category === cat ? "default" : "outline"}
                         size="sm"
-                        className="border-2 border-foreground rounded-sm"
+                        className="border border-border rounded-lg"
                         onClick={() => setCategory(cat)}
                       >
                         <span className={`h-2 w-2 rounded-full mr-2 ${categoryConfig[cat].color}`} />
@@ -163,15 +163,15 @@ export default function ChamadosPage() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground">Localizacao</label>
-                  <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Ex: Apartamento 204 - Cozinha" className="mt-1 border-2 border-foreground rounded-sm" />
+                  <Input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Ex: Apartamento 204 - Cozinha" className="mt-1 border border-border rounded-lg" />
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground">Descricao</label>
-                  <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Descreva o problema com detalhes..." className="mt-1 border-2 border-foreground rounded-sm min-h-[100px]" />
+                  <Textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Descreva o problema com detalhes..." className="mt-1 border border-border rounded-lg min-h-[100px]" />
                 </div>
                 <div className="flex gap-2">
-                  <Button className="border-2 border-foreground rounded-sm" onClick={() => void handleCreateChamado()}>Enviar Chamado</Button>
-                  <Button variant="outline" onClick={() => setShowNewForm(false)} className="border-2 border-foreground rounded-sm">Cancelar</Button>
+                  <Button className="border border-border rounded-lg" onClick={() => void handleCreateChamado()}>Enviar Chamado</Button>
+                  <Button variant="outline" onClick={() => setShowNewForm(false)} className="border border-border rounded-lg">Cancelar</Button>
                 </div>
               </div>
             </CardContent>
@@ -181,7 +181,7 @@ export default function ChamadosPage() {
         <section className="mb-6">
           <div className="flex flex-wrap gap-2">
             {(["todos", "aberto", "em_andamento", "concluido"] as const).map((f) => (
-              <Button key={f} variant={filter === f ? "default" : "outline"} size="sm" onClick={() => setFilter(f)} className="rounded-sm border-2 border-foreground">
+              <Button key={f} variant={filter === f ? "default" : "outline"} size="sm" onClick={() => setFilter(f)} className="rounded-lg border border-border">
                 {f === "todos" ? "Todos" : statusConfig[f as ChamadoStatus].label}
               </Button>
             ))}
@@ -200,7 +200,7 @@ export default function ChamadosPage() {
                   <Card
                     key={chamado.id}
                     onClick={() => setSelectedChamado(chamado)}
-                    className={`cursor-pointer border-2 border-foreground rounded-sm transition-all hover:shadow-[3px_3px_0px_0px] hover:shadow-foreground ${selectedChamado?.id === chamado.id ? "shadow-[3px_3px_0px_0px] shadow-foreground bg-secondary" : ""}`}
+                    className={`cursor-pointer border border-border rounded-lg transition-all hover:shadow-md ${selectedChamado?.id === chamado.id ? "shadow-sm bg-secondary" : ""}`}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between gap-3">
@@ -210,7 +210,7 @@ export default function ChamadosPage() {
                             <h4 className="font-semibold text-foreground">{chamado.title}</h4>
                             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{chamado.description}</p>
                             <div className="flex items-center gap-3 mt-2 flex-wrap">
-                              <Badge className={`text-xs rounded-sm border ${status.color}`}>
+                              <Badge className={`text-xs rounded-lg border ${status.color}`}>
                                 <StatusIcon className="h-3 w-3 mr-1" />
                                 {status.label}
                               </Badge>
@@ -228,22 +228,22 @@ export default function ChamadosPage() {
                 )
               })
             ) : (
-              <div className="text-center py-12 text-muted-foreground">Nenhum chamado encontrado para este filtro.</div>
+              <div className="text-center py-12 text-muted-foreground">Nenhum registro disponível para o filtro selecionado.</div>
             )}
           </section>
 
           <aside>
             {selectedChamado ? (
-              <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground sticky top-4">
+              <Card className="border border-border rounded-lg shadow-sm sticky top-4">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <span className={`h-3 w-3 rounded-full ${categoryConfig[selectedChamado.category].color}`} />
                     <span className="text-sm text-muted-foreground">{categoryConfig[selectedChamado.category].label}</span>
                   </div>
                   <h3 className="text-lg font-bold text-foreground mb-2">{selectedChamado.title}</h3>
-                  <Badge className={`text-xs rounded-sm border mb-4 ${statusConfig[selectedChamado.status].color}`}>{statusConfig[selectedChamado.status].label}</Badge>
+                  <Badge className={`text-xs rounded-lg border mb-4 ${statusConfig[selectedChamado.status].color}`}>{statusConfig[selectedChamado.status].label}</Badge>
 
-                  <div className="space-y-3 text-sm border-t-2 border-foreground pt-4">
+                  <div className="space-y-3 text-sm border-t border-border pt-4">
                     <div className="flex items-start gap-2">
                       <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                       <span className="text-foreground">{selectedChamado.location}</span>
@@ -257,23 +257,23 @@ export default function ChamadosPage() {
                     </div>
                   </div>
 
-                  <div className="border-t-2 border-foreground pt-4 mt-4">
+                  <div className="border-t border-border pt-4 mt-4">
                     <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Descricao</p>
                     <p className="text-sm text-foreground leading-relaxed">{selectedChamado.description}</p>
                   </div>
 
                   {selectedChamado.status === "aberto" && (
-                    <Button variant="outline" className="w-full mt-4 border-2 border-foreground rounded-sm text-red-600" onClick={() => void handleCancelChamado(selectedChamado.id)}>
+                    <Button variant="outline" className="w-full mt-4 border border-border rounded-lg text-red-600" onClick={() => void handleCancelChamado(selectedChamado.id)}>
                       Cancelar Chamado
                     </Button>
                   )}
                 </CardContent>
               </Card>
             ) : (
-              <Card className="border-2 border-dashed border-muted-foreground rounded-sm">
+              <Card className="border border-dashed border-muted-foreground rounded-lg">
                 <CardContent className="p-5 text-center">
                   <Wrench className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Selecione um chamado para ver os detalhes</p>
+                  <p className="text-sm text-muted-foreground">Selecione um chamado para consultar os detalhes</p>
                 </CardContent>
               </Card>
             )}

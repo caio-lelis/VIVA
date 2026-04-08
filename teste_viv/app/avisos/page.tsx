@@ -72,7 +72,7 @@ export default function AvisosPage() {
       <main className="mx-auto max-w-4xl px-4 py-10">
         <section className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-primary">
               <Bell className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
@@ -85,7 +85,7 @@ export default function AvisosPage() {
         <section className="mb-6">
           <div className="flex flex-wrap gap-2">
             {(["todos", "urgente", "importante", "informativo"] as const).map((f) => (
-              <Button key={f} variant={filter === f ? "default" : "outline"} size="sm" onClick={() => setFilter(f)} className="rounded-sm border-2 border-foreground">
+              <Button key={f} variant={filter === f ? "default" : "outline"} size="sm" onClick={() => setFilter(f)} className="rounded-lg border border-border">
                 {f === "todos" ? "Todos" : typeConfig[f].label}
               </Button>
             ))}
@@ -111,7 +111,7 @@ export default function AvisosPage() {
                           void markAsRead(aviso.id)
                         }
                       }}
-                      className={`cursor-pointer border-2 border-foreground rounded-sm transition-all hover:shadow-[3px_3px_0px_0px] hover:shadow-foreground ${!aviso.read ? "bg-secondary" : ""}`}
+                      className={`cursor-pointer border border-border rounded-lg transition-all hover:shadow-md ${!aviso.read ? "bg-secondary" : ""}`}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between gap-3">
@@ -124,7 +124,7 @@ export default function AvisosPage() {
                               </div>
                               <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{aviso.content}</p>
                               <div className="flex items-center gap-2 mt-2">
-                                <Badge className={`text-xs rounded-sm border ${config.badgeClass}`}>{config.label}</Badge>
+                                <Badge className={`text-xs rounded-lg border ${config.badgeClass}`}>{config.label}</Badge>
                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                                   <Calendar className="h-3 w-3" />
                                   {new Date(aviso.date).toLocaleDateString("pt-BR")}
@@ -156,7 +156,7 @@ export default function AvisosPage() {
                           void markAsRead(aviso.id)
                         }
                       }}
-                      className={`cursor-pointer border-2 border-foreground rounded-sm transition-all hover:shadow-[3px_3px_0px_0px] hover:shadow-foreground ${!aviso.read ? "bg-secondary" : ""}`}
+                      className={`cursor-pointer border border-border rounded-lg transition-all hover:shadow-md ${!aviso.read ? "bg-secondary" : ""}`}
                     >
                       <CardContent className="p-4">
                         <div className="flex items-start justify-between gap-3">
@@ -169,7 +169,7 @@ export default function AvisosPage() {
                               </div>
                               <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{aviso.content}</p>
                               <div className="flex items-center gap-2 mt-2">
-                                <Badge className={`text-xs rounded-sm border ${config.badgeClass}`}>{config.label}</Badge>
+                                <Badge className={`text-xs rounded-lg border ${config.badgeClass}`}>{config.label}</Badge>
                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                                   <Calendar className="h-3 w-3" />
                                   {new Date(aviso.date).toLocaleDateString("pt-BR")}
@@ -186,12 +186,12 @@ export default function AvisosPage() {
               </div>
             )}
 
-            {filteredAvisos.length === 0 && <div className="text-center py-12 text-muted-foreground">Nenhum aviso encontrado para este filtro.</div>}
+            {filteredAvisos.length === 0 && <div className="text-center py-12 text-muted-foreground">Nenhum registro disponível para o filtro selecionado.</div>}
           </section>
 
           <aside>
             {selectedAviso ? (
-              <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground sticky top-4">
+              <Card className="border border-border rounded-lg shadow-sm sticky top-4">
                 <CardContent className="p-5">
                   <div className="flex items-center gap-2 mb-3">
                     {(() => {
@@ -199,23 +199,23 @@ export default function AvisosPage() {
                       const Icon = config.icon
                       return <Icon className={`h-5 w-5 ${config.color}`} />
                     })()}
-                    <Badge className={`text-xs rounded-sm border ${typeConfig[selectedAviso.type].badgeClass}`}>{typeConfig[selectedAviso.type].label}</Badge>
+                    <Badge className={`text-xs rounded-lg border ${typeConfig[selectedAviso.type].badgeClass}`}>{typeConfig[selectedAviso.type].label}</Badge>
                   </div>
                   <h3 className="text-lg font-bold text-foreground mb-2">{selectedAviso.title}</h3>
                   <p className="text-xs text-muted-foreground mb-4 flex items-center gap-1">
                     <Calendar className="h-3 w-3" />
                     {new Date(selectedAviso.date).toLocaleDateString("pt-BR", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
                   </p>
-                  <div className="border-t-2 border-foreground pt-4">
+                  <div className="border-t border-border pt-4">
                     <p className="text-sm text-foreground leading-relaxed">{selectedAviso.content}</p>
                   </div>
                 </CardContent>
               </Card>
             ) : (
-              <Card className="border-2 border-dashed border-muted-foreground rounded-sm">
+              <Card className="border border-dashed border-muted-foreground rounded-lg">
                 <CardContent className="p-5 text-center">
                   <Bell className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Selecione um aviso para ver os detalhes</p>
+                  <p className="text-sm text-muted-foreground">Selecione um aviso para consultar os detalhes</p>
                 </CardContent>
               </Card>
             )}

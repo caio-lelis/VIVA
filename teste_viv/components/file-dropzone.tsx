@@ -120,7 +120,7 @@ export function FileDropzone({
               ? {
                   ...f,
                   status: "error" as const,
-                  errorMessage: error instanceof Error ? error.message : "Erro ao enviar arquivo",
+                  errorMessage: error instanceof Error ? error.message : "Falha ao enviar arquivo",
                 }
               : f
           )
@@ -142,10 +142,10 @@ export function FileDropzone({
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          "relative border-2 border-dashed rounded-sm p-8 text-center transition-all cursor-pointer",
+          "relative cursor-pointer rounded-xl border border-dashed p-8 text-center transition-all",
           isDragging
             ? "border-accent bg-accent/10"
-            : "border-foreground/50 hover:border-foreground bg-card"
+            : "border-border bg-card hover:border-primary/40"
         )}
       >
         <input
@@ -156,7 +156,7 @@ export function FileDropzone({
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
         <div className="flex flex-col items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-sm border-2 border-foreground bg-secondary">
+          <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-border bg-secondary">
             <Upload className="h-8 w-8 text-foreground" />
           </div>
           <div>
@@ -192,15 +192,15 @@ export function FileDropzone({
               <div
                 key={fileItem.id}
                 className={cn(
-                  "flex items-center gap-4 p-4 border-2 rounded-sm bg-card",
+                  "flex items-center gap-4 rounded-lg border p-4 bg-card",
                   fileItem.status === "error"
-                    ? "border-destructive"
+                    ? "border-destructive/40"
                     : fileItem.status === "success"
-                    ? "border-accent"
-                    : "border-foreground"
+                    ? "border-emerald-300"
+                    : "border-border"
                 )}
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-secondary">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary">
                   <File className="h-5 w-5 text-foreground" />
                 </div>
                 
@@ -231,7 +231,7 @@ export function FileDropzone({
                   {(fileItem.status === "pending" || fileItem.status === "error") && (
                     <button
                       onClick={() => removeFile(fileItem.id)}
-                      className="p-1 hover:bg-secondary rounded-sm transition-colors"
+                      className="p-1 hover:bg-secondary rounded-lg transition-colors"
                     >
                       <X className="h-4 w-4 text-muted-foreground" />
                     </button>
@@ -245,7 +245,7 @@ export function FileDropzone({
             <Button
               onClick={handleUpload}
               disabled={isUploading}
-              className="w-full h-12 text-base font-semibold bg-accent hover:bg-accent/90 text-accent-foreground border-2 border-foreground"
+              className="h-12 w-full border border-border bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/90"
             >
               {isUploading ? (
                 <>

@@ -27,7 +27,7 @@ interface Reserva {
 }
 
 const statusConfig = {
-  confirmada: { label: "Confirmada", color: "bg-green-100 text-green-700 border-green-300" },
+  confirmada: { label: "Confirmada", color: "bg-green-100 text-emerald-700 border-green-300" },
   pendente: { label: "Pendente", color: "bg-yellow-100 text-yellow-700 border-yellow-300" },
   cancelada: { label: "Cancelada", color: "bg-red-100 text-red-700 border-red-300" },
 }
@@ -108,7 +108,7 @@ export default function ReservasPage() {
       <main className="mx-auto max-w-6xl px-4 py-10">
         <section className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-primary">
               <CalendarDays className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
@@ -127,7 +127,7 @@ export default function ReservasPage() {
                   <Card
                     key={espaco.id}
                     onClick={() => setSelectedEspaco(espaco)}
-                    className={`cursor-pointer border-2 border-foreground rounded-sm transition-all hover:shadow-[3px_3px_0px_0px] hover:shadow-foreground ${selectedEspaco?.id === espaco.id ? "shadow-[3px_3px_0px_0px] shadow-foreground bg-secondary" : ""}`}
+                    className={`cursor-pointer border border-border rounded-lg transition-all hover:shadow-md ${selectedEspaco?.id === espaco.id ? "shadow-sm bg-secondary" : ""}`}
                   >
                     <CardContent className="p-4">
                       <h4 className="font-semibold text-foreground mb-1">{espaco.name}</h4>
@@ -144,15 +144,15 @@ export default function ReservasPage() {
             </section>
 
             <section>
-              <Card className="border-2 border-foreground rounded-sm">
+              <Card className="border border-border rounded-lg">
                 <CardContent className="p-5">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-semibold text-foreground capitalize">{currentMonth}</h3>
                     <div className="flex gap-1">
-                      <Button variant="outline" size="icon" onClick={prevMonth} className="h-8 w-8 border-2 border-foreground rounded-sm">
+                      <Button variant="outline" size="icon" onClick={prevMonth} className="h-8 w-8 border border-border rounded-lg">
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="icon" onClick={nextMonth} className="h-8 w-8 border-2 border-foreground rounded-sm">
+                      <Button variant="outline" size="icon" onClick={nextMonth} className="h-8 w-8 border border-border rounded-lg">
                         <ChevronRight className="h-4 w-4" />
                       </Button>
                     </div>
@@ -176,14 +176,14 @@ export default function ReservasPage() {
                         selectedDate.getFullYear() === new Date().getFullYear()
 
                       return (
-                        <div key={day} className={`relative p-2 text-sm rounded-sm border transition-all cursor-pointer hover:bg-secondary ${isToday ? "border-2 border-accent font-bold" : "border-transparent"}`}>
+                        <div key={day} className={`relative p-2 text-sm rounded-lg border transition-all cursor-pointer hover:bg-secondary ${isToday ? "border border-accent font-bold" : "border-transparent"}`}>
                           {day}
                           {dayReservas.length > 0 && (
                             <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5">
                               {dayReservas.slice(0, 3).map((r) => (
                                 <span
                                   key={r.id}
-                                  className={`h-1.5 w-1.5 rounded-full ${r.status === "confirmada" ? "bg-green-500" : r.status === "pendente" ? "bg-yellow-500" : "bg-red-500"}`}
+                                  className={`h-1.5 w-1.5 rounded-full ${r.status === "confirmada" ? "bg-emerald-500" : r.status === "pendente" ? "bg-yellow-500" : "bg-red-500"}`}
                                 />
                               ))}
                             </div>
@@ -199,29 +199,29 @@ export default function ReservasPage() {
 
           <aside className="space-y-4">
             {selectedEspaco && (
-              <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground">
+              <Card className="border border-border rounded-lg shadow-sm">
                 <CardContent className="p-5">
                   <h3 className="font-semibold text-foreground mb-2">{selectedEspaco.name}</h3>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                     <Users className="h-4 w-4" /> Capacidade: {selectedEspaco.capacity} pessoas
                   </div>
-                  <div className="border-t-2 border-foreground pt-3">
+                  <div className="border-t border-border pt-3">
                     <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Regras</p>
                     <ul className="space-y-1">
                       {selectedEspaco.rules.map((rule, i) => (
                         <li key={i} className="text-sm text-foreground flex items-start gap-2">
-                          <Check className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
+                          <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                           {rule}
                         </li>
                       ))}
                     </ul>
                   </div>
-                  <Button className="w-full mt-4 border-2 border-foreground rounded-sm" onClick={() => void solicitarReserva()}>Solicitar Reserva</Button>
+                  <Button className="w-full mt-4 border border-border rounded-lg" onClick={() => void solicitarReserva()}>Solicitar Reserva</Button>
                 </CardContent>
               </Card>
             )}
 
-            <Card className="border-2 border-foreground rounded-sm shadow-[3px_3px_0px_0px] shadow-foreground">
+            <Card className="border border-border rounded-lg shadow-sm">
               <CardContent className="p-5">
                 <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Minhas Reservas</h3>
                 {minhasReservas.length > 0 ? (
@@ -239,13 +239,13 @@ export default function ReservasPage() {
                             <Clock className="h-3 w-3" />
                             {reserva.startTime} - {reserva.endTime}
                           </p>
-                          <Badge className={`mt-2 text-xs rounded-sm border ${statusConfig[reserva.status].color}`}>{statusConfig[reserva.status].label}</Badge>
+                          <Badge className={`mt-2 text-xs rounded-lg border ${statusConfig[reserva.status].color}`}>{statusConfig[reserva.status].label}</Badge>
                         </li>
                       )
                     })}
                   </ul>
                 ) : (
-                  <p className="text-sm text-muted-foreground">Voce nao tem reservas.</p>
+                  <p className="text-sm text-muted-foreground">Nenhuma reserva registrada para o período atual.</p>
                 )}
               </CardContent>
             </Card>

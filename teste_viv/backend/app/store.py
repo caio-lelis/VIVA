@@ -59,6 +59,13 @@ MODULES = [
         "badge": None,
         "available": True,
     },
+    {
+        "href": "/infraestrutura",
+        "title": "Infraestrutura da Home",
+        "description": "Gerencie imagens e descrições da página pública de infraestrutura.",
+        "badge": "admin",
+        "available": True,
+    },
 ]
 
 RECENT_ACTIVITY = [

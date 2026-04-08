@@ -1,10 +1,18 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { DM_Sans, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dm-sans",
+})
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jetbrains-mono",
+})
 
 export const metadata: Metadata = {
   title: 'Portal do Condomínio - Upload de Documentos',
@@ -35,8 +43,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="pt-BR">
+      <body className={`${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

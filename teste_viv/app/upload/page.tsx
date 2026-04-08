@@ -100,7 +100,7 @@ export default function UploadPage() {
         {/* Step 1 — Selecionar Serviço */}
         <section className="mb-8">
           <div className="mb-4 flex items-center gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-sm border-2 border-foreground bg-foreground text-background text-xs font-bold">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-foreground text-background text-xs font-bold">
               1
             </div>
             <h3 className="text-sm font-semibold uppercase tracking-widest text-foreground">
@@ -108,7 +108,7 @@ export default function UploadPage() {
             </h3>
           </div>
 
-          <Card className="border-2 border-foreground rounded-sm shadow-[4px_4px_0px_0px] shadow-foreground">
+          <Card className="border border-border rounded-lg shadow-sm">
             <CardContent className="p-6">
               <ServiceSelector
                 selected={selectedService}
@@ -129,7 +129,7 @@ export default function UploadPage() {
 
             <section className="mb-8">
               <div className="mb-4 flex items-center gap-3">
-                <div className="flex h-7 w-7 items-center justify-center rounded-sm border-2 border-foreground bg-accent text-accent-foreground text-xs font-bold">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-border bg-accent text-accent-foreground text-xs font-bold">
                   2
                 </div>
                 <div>
@@ -145,7 +145,7 @@ export default function UploadPage() {
                 </div>
               </div>
 
-              <Card className="border-2 border-foreground rounded-sm shadow-[4px_4px_0px_0px] shadow-foreground">
+              <Card className="border border-border rounded-lg shadow-sm">
                 <CardContent className="p-6 md:p-8">
                   <FileDropzone
                     onUpload={uploadToMinio}
@@ -166,7 +166,7 @@ export default function UploadPage() {
         )}
 
         {/* Footer */}
-        <footer className="border-t-2 border-foreground pt-8 text-center">
+        <footer className="border-t border-border pt-8 text-center">
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} LegoTech. Todos os direitos reservados.
           </p>

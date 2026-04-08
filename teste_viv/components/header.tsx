@@ -15,6 +15,7 @@ const navLinks = [
   { href: "/financeiro", label: "Financeiro", key: "financeiro", adminOnly: true },
   { href: "/moradores", label: "Moradores", key: "moradores", adminOnly: true },
   { href: "/relatorios", label: "Relatórios", key: "relatorios", adminOnly: true },
+  { href: "/infraestrutura", label: "Infraestrutura", key: "infraestrutura", adminOnly: true },
 ]
 
 interface HeaderProps {
@@ -57,20 +58,16 @@ export function Header({ activePage }: HeaderProps) {
   }
 
   return (
-    <header className="border-b-2 border-foreground bg-card">
-      <div className="mx-auto max-w-6xl px-4 py-4">
+    <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
+      <div className="mx-auto max-w-6xl px-4 py-4 md:px-6">
         <div className="flex items-center justify-between">
-          <Link href="/sistema" className="flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-sm border-2 border-foreground bg-primary">
-              <Building2 className="h-6 w-6 text-primary-foreground" />
+          <Link href="/sistema" className="flex items-center gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Building2 className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-base font-bold tracking-tight text-foreground leading-none">
-                Portal do Condomínio
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                VIVA - Arquitetura de Lazer
-              </p>
+              <p className="text-base font-semibold tracking-tight text-foreground leading-none">Portal do Condomínio</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">VIVA - Arquitetura de Lazer</p>
             </div>
           </Link>
 
@@ -83,10 +80,10 @@ export function Header({ activePage }: HeaderProps) {
                   key={link.key}
                   href={link.href}
                   className={[
-                    "rounded-sm px-3 py-1.5 text-sm font-medium transition-colors",
+                    "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
                     isActive
-                      ? "border-2 border-foreground bg-primary text-primary-foreground shadow-[2px_2px_0px_0px] shadow-foreground"
-                      : "text-foreground hover:text-accent",
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-secondary",
                   ].join(" ")}
                 >
                   {link.label}
@@ -95,7 +92,7 @@ export function Header({ activePage }: HeaderProps) {
             })}
             <button
               onClick={handleLogout}
-              className="rounded-sm px-3 py-1.5 text-sm font-medium text-foreground hover:text-accent"
+              className="rounded-md px-3 py-1.5 text-sm font-medium text-foreground hover:bg-secondary"
               type="button"
             >
               Sair
@@ -104,7 +101,7 @@ export function Header({ activePage }: HeaderProps) {
 
           {/* Mobile menu button */}
           <button
-            className="flex h-9 w-9 items-center justify-center rounded-sm border-2 border-foreground bg-secondary md:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card md:hidden"
             onClick={() => setMenuOpen((v) => !v)}
             aria-label="Abrir menu"
           >
@@ -114,7 +111,7 @@ export function Header({ activePage }: HeaderProps) {
 
         {/* Mobile nav */}
         {menuOpen && (
-          <nav className="mt-3 flex flex-col gap-1 border-t-2 border-foreground pt-3 md:hidden">
+          <nav className="mt-3 flex flex-col gap-1 border-t border-border pt-3 md:hidden">
             {visibleLinks.map((link) => {
               const isActive = activePage === link.key
               return (
@@ -123,10 +120,10 @@ export function Header({ activePage }: HeaderProps) {
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
                   className={[
-                    "rounded-sm px-3 py-2 text-sm font-medium transition-colors",
+                    "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     isActive
-                      ? "border-2 border-foreground bg-primary text-primary-foreground"
-                      : "text-foreground hover:text-accent",
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-secondary",
                   ].join(" ")}
                 >
                   {link.label}
@@ -138,7 +135,7 @@ export function Header({ activePage }: HeaderProps) {
                 setMenuOpen(false)
                 void handleLogout()
               }}
-              className="rounded-sm px-3 py-2 text-left text-sm font-medium text-foreground hover:text-accent"
+              className="rounded-md px-3 py-2 text-left text-sm font-medium text-foreground hover:bg-secondary"
               type="button"
             >
               Sair
